@@ -1,8 +1,6 @@
 import numpy as np
 import copy
-
-def makePrediction(xValues: np.array, w: np.array, b: float):
-    return np.dot(xValues, w) + b
+import matplotlib.pyplot as plt
 
 
 def descenso(xValues: np.array, yValues: np.array, w: np.array, b: float):
@@ -23,12 +21,28 @@ def descenso(xValues: np.array, yValues: np.array, w: np.array, b: float):
 def descensoGradiente(w_init: np.array, b_init: np.array, numIt: int, xValues: np.array, yValues: np.array, alpha: float, descenso):
     w = copy.deepcopy(w_init)
     b = copy.deepcopy(b_init)
-
-    for _ in range(numIt):
+    cost = np.zeros(numIt)
+    for k in range(numIt):
         desW, desB = descenso(xValues, yValues, w, b)
         w = w - alpha * desW
         b = b - alpha * desB
+        cost[k] = coste(xValues, yValues, w, b)
+    plt.plot(cost)
+    plt.show()
     return w, b
+
+
+def normalizacionZscore(xValues: np.array):
+    return (xValues - np.mean(xValues, axis=0)) / np.std(xValues, axis=0)
+
+
+def coste(xValues: np.array, yValues: np.array, w: np.array, b: float):
+    cost = 0.0
+    for i in range(len(xValues)):
+        result = np.dot(xValues[i], w) + b
+        cost += (result - yValues[i])**2
+
+    return cost
 
 
 if __name__ == "__main__":
@@ -42,4 +56,13 @@ if __name__ == "__main__":
     print(f"El valor de w es {w}, el valor de b es {b}")
     for i in range(len(X_train)):
         print(f"Predicción -> {np.dot(w, X_train[i]) + b}")
+        print(f"Valor real -> {y_train[i]}")
+    print("--------------------------------------")
+
+
+    X_trainN = normalizacionZscore(X_train)
+    w, b = descensoGradiente(initial_w, initial_b, iterations, X_trainN, y_train, alpha, descenso)
+    print(f"El valor de w es {w}, el valor de b es {b}")
+    for i in range(len(X_train)):
+        print(f"Predicción -> {np.dot(w, X_trainN[i]) + b}")
         print(f"Valor real -> {y_train[i]}")
