@@ -1,6 +1,8 @@
 import numpy as np
 import copy
 import matplotlib.pyplot as plt
+from sklearn.linear_model import SGDRegressor
+from sklearn.preprocessing import StandardScaler
 
 
 def descenso(xValues: np.array, yValues: np.array, w: np.array, b: float):
@@ -90,9 +92,38 @@ def ingenieriaCaracteristicas():
     w, b = descensoGradiente(np.zeros(X.shape[1]), 0, 10000, X, y, 1e-1, descenso) 
     print(f"{w} // {b}") ##Viendo los valores de w, al tener más valor para x^2, esta variable tiene más relevancia en este caso, lo cual es normal dado que la función es y = x^2
     mostrarValues(x, X, y, w, b, True)
+
+
+def scikitRegresion():
+    x = np.arange(0, 20, 1)
+    y = 2 * x + 13 
+    y = y / 43
+    y = y * x
+    X = np.c_[x, x**2, x**3, x**4, x**5, x**6, x**7]
+    #X = X.reshape(-1, 1)
+    scaler = StandardScaler()
+    X_norm = scaler.fit_transform(X)
+    sgdr = SGDRegressor(max_iter=10000)
+    sgdr.fit(X_norm, y)
+
+    b = sgdr.intercept_
+    w = sgdr.coef_
+    print(f"{w} // {b}")
+    y_pred_sgd = sgdr.predict(X_norm)
+    mostrarValues(x, X, y, w, b, True)
+
+
+    xnor = normalizacionZscore(X)
+    w, b = descensoGradiente(np.zeros(X.shape[1]), 0, 10000, xnor, y, 1e-1, descenso) 
+    mostrarValues(x, X, y, w, b, True)
+
+    print(f"Prediction on training set:\n{y_pred_sgd[:4]}" )
+    print(f"Target values \n{y[:4]}")
+    print(f"{w} // {b}")
     
 
 if __name__ == "__main__":
     #regresiónLinealMain()
-    ingenieriaCaracteristicas()
+    #ingenieriaCaracteristicas()
+    scikitRegresion()
     
