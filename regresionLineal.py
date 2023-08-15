@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 
 class RL():
 
-    def __init__(self, initial_w, initial_b, iterations, X_train, y_train, alpha, normalizacion) -> None:
+    def __init__(self, initial_w, initial_b, iterations, X_train, y_train, alpha, normalizacion, lambd = 1) -> None:
         if normalizacion:
             self.x = self.normalizacionZscore(X_train)
         else:
@@ -16,6 +16,7 @@ class RL():
         
         self.y = y_train
         self.alpha = alpha
+        self.lambd = lambd
     
 
     def descenso(self, w, b):
@@ -28,7 +29,13 @@ class RL():
             for j in range(n):
                 sum_w[j] += (funcion - self.y[i]) * self.x[i][j]
             sum_b += funcion - self.y[i]
-        return sum_w / m, sum_b / m
+
+        sum_w /= m
+        sum_b /= m
+
+        for j in range(n):
+            sum_w[j] = sum_w[j] + (self.lambd / m) * w[j]
+        return sum_w, sum_b
     
 
     def descensoGradiente(self):
@@ -49,12 +56,18 @@ class RL():
 
     def coste(self, w, b):
         cost = 0.0
-        for i in range(len(self.x)):
+        m, n = self.x.shape
+        for i in range(m):
             result = np.dot(self.x[i], w) + b
             cost += (result - self.y[i])**2
+        cost = cost / (2 * m)
+        regCost = 0
+        for j in range(n):
+            regCost += (w[j] ** 2)
 
-        return cost
+        regCost = (self.lambd / (2*m)) * regCost
+        return cost + regCost
     
 
-    def normalizacionZscore(xValues: np.array):
+    def normalizacionZscore(self, xValues: np.array):
         return (xValues - np.mean(xValues, axis=0)) / np.std(xValues, axis=0)

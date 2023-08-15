@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 
 class RLG():
 
-    def __init__(self, initial_w, initial_b, iterations, X_train, y_train, alpha, normalizacion) -> None:
+    def __init__(self, initial_w, initial_b, iterations, X_train, y_train, alpha, normalizacion = False, lambd = 1) -> None:
         if normalizacion:
             self.x = self.normalizacionZscore(X_train)
         else:
@@ -16,6 +16,7 @@ class RLG():
         
         self.y = y_train
         self.alpha = alpha
+        self.lambd = lambd
     
 
     def descenso(self, w, b):
@@ -28,14 +29,21 @@ class RLG():
             for j in range(n):
                 desW[j] += (funcion - self.y[i]) * self.x[i][j]
             desB += funcion - self.y[i]
+        
+        desW /= m
+        desB /= m
 
-        return desW / m, desB / m
+        for j in range(n):
+            desW[j] = desW[j] + (self.lambd / m) * w[j]
+
+        return desW, desB
     
 
     def descensoGradiente(self):
         w = copy.deepcopy(self.w)
         b = copy.deepcopy(self.b)
         cost = np.zeros(self.iter)
+        m, n = self.x.shape
         for k in range(self.iter):
             desW, desB = self.descenso(w, b)
             w = w - self.alpha * desW
@@ -54,12 +62,19 @@ class RLG():
         for i in range(m):
             funcion = self.sigmoid(np.dot(self.x[i], w) + b)
             cost += -self.y[i] * np.log(funcion) - (1 - self.y[i]) * np.log(1 - funcion)
-        return cost / m
-    
+        
+        cost /= m
+        regCost = 0
+        for j in range(n):
+            regCost += (w[j] ** 2)
 
-    def normalizacionZscore(xValues: np.array):
+        regCost = (self.lambd / (2*m)) * regCost
+        return cost + regCost
+            
+
+    def normalizacionZscore(self, xValues: np.array):
         return (xValues - np.mean(xValues, axis=0)) / np.std(xValues, axis=0)
     
 
-    def sigmoid(z: float):
+    def sigmoid(self, z: float):
         return 1 / (1 + np.exp(-z))

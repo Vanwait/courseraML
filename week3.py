@@ -2,6 +2,8 @@ import numpy as np
 import copy
 import matplotlib.pyplot as plt
 from sklearn.linear_model import LogisticRegression
+from regresionLineal import RL
+from regresionLogica import RLG
 
 
 def descenso(xValues: np.array, yValue: np.array, w: np.array, b: float):
@@ -83,13 +85,28 @@ def regresioLogicaScikit():
     print("Prediction on training set:", y_pred)
     print("Accuracy on training set:", lr_model.score(X, y))
 
-    
+
+def clases():
+    X_train = np.array([[0.5, 1.5], [1,1], [1.5, 0.5], [3, 0.5], [2, 2], [1, 2.5]])
+    X_train = normalizacionZscore(X_train)
+    y_train = np.array([0, 0, 0, 1, 1, 1])
+    w_tmp  = np.zeros(len(X_train[0]))
+    b_tmp  = 0.
+    alph = 0.1
+    iters = 10000
+    rlg = RLG(w_tmp, b_tmp, iters, X_train, y_train, alph)
+    w, b = rlg.descensoGradiente()
+    print(f"w -> {w} // b -> {b}")
+
+
+
 if __name__ == '__main__':
     regresionLogica()
     print("---------------------------")
-    regresionLogicaConEscalado()
-    print("---------------------------")
-    regresioLogicaScikit()
+    #regresionLogicaConEscalado()
+    #print("---------------------------")
+    #regresioLogicaScikit()
+    clases()
 
 
 
