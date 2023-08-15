@@ -1,6 +1,8 @@
 import numpy as np
 import copy
 import matplotlib.pyplot as plt
+from sklearn.linear_model import LogisticRegression
+
 
 def descenso(xValues: np.array, yValue: np.array, w: np.array, b: float):
 
@@ -47,7 +49,7 @@ def normalizacionZscore(xValues: np.array):
     return (xValues - np.mean(xValues, axis=0)) / np.std(xValues, axis=0)
 
 
-if __name__ == '__main__':
+def regresionLogica():
     X_train = np.array([[0.5, 1.5], [1,1], [1.5, 0.5], [3, 0.5], [2, 2], [1, 2.5]])
     y_train = np.array([0, 0, 0, 1, 1, 1])
     w_tmp  = np.zeros(len(X_train[0]))
@@ -57,6 +59,37 @@ if __name__ == '__main__':
 
     w, b = descensoGradiente(X_train, y_train, w_tmp, b_tmp, alph, iters)
     print(f"w -> {w} // b -> {b}")
+
+
+def regresionLogicaConEscalado():
+    X_train = np.array([[0.5, 1.5], [1,1], [1.5, 0.5], [3, 0.5], [2, 2], [1, 2.5]])
+    X_train = normalizacionZscore(X_train)
+    y_train = np.array([0, 0, 0, 1, 1, 1])
+    w_tmp  = np.zeros(len(X_train[0]))
+    b_tmp  = 0.
+    alph = 0.1
+    iters = 10000
+
+    w, b = descensoGradiente(X_train, y_train, w_tmp, b_tmp, alph, iters)
+    print(f"w -> {w} // b -> {b}")
+
+
+def regresioLogicaScikit():
+    X = np.array([[0.5, 1.5], [1,1], [1.5, 0.5], [3, 0.5], [2, 2], [1, 2.5]])
+    y = np.array([0, 0, 0, 1, 1, 1])
+    lr_model = LogisticRegression()
+    lr_model.fit(X, y)
+    y_pred = lr_model.predict(X)
+    print("Prediction on training set:", y_pred)
+    print("Accuracy on training set:", lr_model.score(X, y))
+
+    
+if __name__ == '__main__':
+    regresionLogica()
+    print("---------------------------")
+    regresionLogicaConEscalado()
+    print("---------------------------")
+    regresioLogicaScikit()
 
 
 
