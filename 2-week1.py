@@ -8,6 +8,7 @@ from keras.activations import sigmoid
 from keras.losses import binary_crossentropy
 from keras.optimizers import Adam
 from NN import NN
+from NN2 import NN2
 
 def parteUno():
     X_train = np.array([[1.0], [2.0]], dtype=np.float32)
@@ -74,7 +75,7 @@ def RoastCoffee2():
 
 def RoastCoffee3():
     wValues = [
-        [np.array([-0.03889755, 0.67637865]), np.array([-0.05489755, 0.67678865]), np.array([-0.0344755, 0.23637865])], 
+        [np.array([-0.03889755, 0.87865]), np.array([-0.05489755, 0.097678865]), np.array([0.0344755, -0.23637865])], 
         [np.array([-0.06811755, 0.55637865, 0.09873])]
     ]
     bValues = [
@@ -82,9 +83,23 @@ def RoastCoffee3():
         [3]
     ]
     model = NN(2, np.array([3, 1]), wValues, bValues)
-    fore = model.forwardProp(np.array([200.0, 17.0]))
+    fore = model.forwardProp(np.array([120.0, 5.0]))
+    print(f"El resultado es --> {fore}")
+
+
+def RoastCoffee4():
+    wVal = [np.array([
+        [-0.03889755, -0.05489755, 0.0344755],
+        [0.87865, 0.097678865, -0.23637865]
+    ]), np.array([[-0.06811755], [0.55637865], [0.09873]])]
+    bVal = [np.array([-1, 1, 2]), np.array([3])]
+    model = NN2(wVal, bVal)
+    fore = model.forwardProp(np.array([120.0, 5.0]))
     print(f"El resultado es --> {fore}")
 
 if __name__ == '__main__':
+    print("----------NN1----------")
     RoastCoffee3()
+    print("----------NN2----------")
+    RoastCoffee4()
     #prueba()

@@ -21,7 +21,6 @@ class NN():
     def forwardProp(self, xValues: np.array):
         a = copy.deepcopy(xValues)
         for layer in self.layers:
-            print(f"aValues --> {a}")
             aAux = []
             for unit in layer:
                 aAux.append(self.sigmoid(unit.zValue(a)))
