@@ -75,27 +75,32 @@ def RoastCoffee2():
 
 def RoastCoffee3():
     wValues = [
-        [np.array([-0.03889755, 0.87865]), np.array([-0.05489755, 0.097678865]), np.array([0.0344755, -0.23637865])], 
-        [np.array([-0.06811755, 0.55637865, 0.09873])]
+        [np.array([-8.93, -0.1]), np.array([0.29, -7.32]), np.array([12.9, 10.81])], 
+        [np.array([-31.18, -27.59, -32.56])]
     ]
     bValues = [
-        [-1, 1, 2], 
-        [3]
+        [-9.82, -9.28, 0.96], 
+        [15.41]
     ]
     model = NN(2, np.array([3, 1]), wValues, bValues)
-    fore = model.forwardProp(np.array([120.0, 5.0]))
+    fore = model.forwardProp(np.array([200.0, 17.0]))
     print(f"El resultado es --> {fore}")
+    if fore >= 0.5:
+        print("El resultado final es 1")
+    else:
+        print("El resultado final es 0")
 
 
 def RoastCoffee4():
-    wVal = [np.array([
-        [-0.03889755, -0.05489755, 0.0344755],
-        [0.87865, 0.097678865, -0.23637865]
-    ]), np.array([[-0.06811755], [0.55637865], [0.09873]])]
-    bVal = [np.array([-1, 1, 2]), np.array([3])]
+    wVal = [np.array( [[-8.93,  0.29, 12.9 ], [-0.1,  -7.32, 10.81]] ), np.array( [[-31.18], [-27.59], [-32.56]] )]
+    bVal = [np.array( [-9.82, -9.28,  0.96] ), np.array( [15.41] )]
     model = NN2(wVal, bVal)
-    fore = model.forwardProp(np.array([120.0, 5.0]))
+    fore = model.forwardProp(np.array([200.0, 17.0]))
     print(f"El resultado es --> {fore}")
+    if fore >= 0.5:
+        print("El resultado final es 1")
+    else:
+        print("El resultado final es 0")
 
 if __name__ == '__main__':
     print("----------NN1----------")
